@@ -40,7 +40,7 @@ public:
   MCP_DAC(uint8_t dataOut, uint8_t clock);
 
   //       both HW and SW SPI.
-  void     begin(uint8_t select);
+  void     begin(void (*select)(bool state));
 
   //       returns 0 or 1
   uint8_t  channels();
@@ -92,7 +92,7 @@ public:
 protected:
   uint8_t  _dataOut;              //  Data out Pin (MOSI)
   uint8_t  _clock;                //  Clock Pin (SCK)
-  uint8_t  _select;               //  Chip Select Pin (CS)
+  void     (*_select)(bool state);//  Chip Select Function (CS)
   uint8_t  _latchPin = 255;       //  Latch-DAC Pin (LDAC)
   bool     _hwSPI;                //  Hardware SPI (true) or Software SPI (false)
   uint32_t _SPIspeed = 16000000;  //  SPI-Bus Frequency

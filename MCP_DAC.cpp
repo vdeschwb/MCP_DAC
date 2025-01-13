@@ -16,7 +16,7 @@ MCP_DAC::MCP_DAC(__SPI_CLASS__ *inSPI)
   mySPI     = inSPI;
   _dataOut  = 255;
   _clock    = 255;
-  _select   = 0;
+  _select   = nullptr;
   _hwSPI    = true;
   _channels = 1;
   _maxValue = 255;
@@ -30,7 +30,7 @@ MCP_DAC::MCP_DAC(uint8_t dataOut,  uint8_t clock)
   mySPI     = NULL;
   _dataOut  = dataOut;
   _clock    = clock;
-  _select   = 0;
+  _select   = nullptr;
   _hwSPI    = false;
   _channels = 1;
   _maxValue = 255;
@@ -48,11 +48,10 @@ void MCP_DAC::reset()
 }
 
 
-void MCP_DAC::begin(uint8_t select)
+void MCP_DAC::begin(void (*select)(bool state))
 {
   _select = select;
-  pinMode(_select, OUTPUT);
-  digitalWrite(_select, HIGH);
+  _select(HIGH);
 
   _spi_settings = SPISettings(_SPIspeed, MSBFIRST, SPI_MODE0);
 
@@ -240,7 +239,7 @@ bool MCP_DAC::usesHWSPI()
 void MCP_DAC::transfer(uint16_t data)
 {
   //  DATA TRANSFER
-  digitalWrite(_select, LOW);
+  _select(LOW);
   if (_hwSPI)
   {
     mySPI->beginTransaction(_spi_settings);
@@ -253,7 +252,7 @@ void MCP_DAC::transfer(uint16_t data)
     swSPI_transfer((uint8_t)(data >> 8));
     swSPI_transfer((uint8_t)(data & 0xFF));
   }
-  digitalWrite(_select, HIGH);
+  _select(HIGH);
 }
 
 
