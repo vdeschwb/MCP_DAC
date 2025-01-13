@@ -13,6 +13,8 @@
 
 Arduino library for Microchip SPI DAC's:  8, 10, 12 bits, 1, 2 channel.
 
+```NOTE: This fork's sole purpose is to utilize a callback function for chip select (CS) instead of the H/W/ pin.```
+
 
 ## Description
 
